@@ -41,28 +41,44 @@ let sendData = (data) => {
 
 // WebRTC methods
 let pc;
-let localStream;
-let remoteStreamElement = document.querySelector('#remoteStream');
+let dc;
 
 let getLocalStream = () => {
-  navigator.mediaDevices.getUserMedia({ audio: true, video: true })
-    .then((stream) => {
-      console.log('Stream found');
-      localStream = stream;
-      // Connect after making sure that local stream is availble
-      socket.connect();
-    })
-    .catch(error => {
-      console.error('Stream not found: ', error);
-    });
+socket.connect();
+console.log("Connecting...");
 }
+
+function handleSendChannelStatusChange(data)
+{
+    console.log('Received something');
+    console.log(data);
+}
+
+function handleReceiveMessage(message){
+    console.log("Message received");
+    console.log(message);
+    var el = document.createElement("p");
+    var txtNode = document.createTextNode(message.data);
+
+    el.appendChild(txtNode);
+    document.getElementById('remotetext').appendChild(el);
+}
+
+function receiveChannelCallback(event) {
+    receiveChannel = event.channel;
+    receiveChannel.onmessage = handleReceiveMessage;
+    receiveChannel.onopen = handleSendChannelStatusChange;
+    receiveChannel.onclose = handleSendChannelStatusChange;
+  }
+
+
 
 let createPeerConnection = () => {
   try {
     pc = new RTCPeerConnection(PC_CONFIG);
     pc.onicecandidate = onIceCandidate;
-    pc.onaddstream = onAddStream;
-    pc.addStream(localStream);
+    dc = pc.createDataChannel("datachannel");
+    pc.ondatachannel = receiveChannelCallback;
     console.log('PeerConnection created');
   } catch (error) {
     console.error('PeerConnection failed: ', error);
@@ -118,9 +134,15 @@ let handleSignalingData = (data) => {
       break;
     case 'candidate':
       pc.addIceCandidate(new RTCIceCandidate(data.candidate));
+      console.log('ICE');
       break;
   }
 };
 
 // Start connection
 getLocalStream();
+
+function send_data(data)
+{
+  dc.send(data);
+}
