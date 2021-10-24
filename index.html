@@ -16,27 +16,49 @@
     <link rel="stylesheet" href="main.css">
 </head>
 <body>
-    <IonGrid >
-    <IonRow>
-    <IonCol col-6>
-        <ion-card class="block-container level">
-        <canvas class="block" style="border: 1px solid grey;"> 
-        </canvas>
-        </ion-card>
-    </IonCol>
-    
-    <IonCol col-6>
-        <ion-card class="block-container level">
-        <canvas class="block" style="border: 1px solid grey;"> 
-        </canvas>
-        </ion-card>
-    </IonCol >
+    <ion-header translucent="true" style="padding:10px;background-color: rgb(176 254 112);">
 
-    </IonRow>
-    </IonGrid>
-    <br>
-    <span id="remotetext">Text Messages:<br></span>
-    <br>
-    <input type=text id="inputtext"></input>
+        <center>
+            <ion-icon name="school-outline" size="large"></ion-icon>
+            <ion-title>Face2Face : AI Assisted Low Latency, Low Bandwidth, Privacy Preserving Teleconferences</ion-title>
+             </center>
+      </ion-header>
+
+    <ion-grid >
+    <ion-row>
+    <ion-col col-4>
+        <ion-card class="block-container level">
+            <ion-card-title>
+                <b>Local</b>
+            </ion-card-title>
+            <canvas class="block" style="border: 1px solid grey;"> 
+            </canvas>
+        </ion-card>
+    </ion-col>
+    
+    <ion-col col-4>
+        <ion-card class="block-container level">
+        <ion-card-title>
+            <b>Remote</b>
+        </ion-card-title>
+        <canvas class="block" style="border: 1px solid grey;"> 
+        </canvas>
+        </ion-card>
+    </ion-col>
+    <ion-col col-4>
+        <ion-card style="padding: 5%;">
+        <ion-card-title>
+            <b>Text Messages:</b>
+        </ion-card-title>
+        <ion-list id="remotetext">
+
+        </ion-list>
+        <input type=text id="inputtext" style="width: 100%;"></input>
+        </ion-card>
+    </ion-col>  
+    <ion-row>
+    <ion-grid>
+
+
 </body>
 </html>

@@ -56,7 +56,7 @@ function handleSendChannelStatusChange(data)
 
 function add_text(text)
 {
-  var el = document.createElement("p");
+  var el = document.createElement("ion-item");
   var txtNode = document.createTextNode(text);
   el.appendChild(txtNode);
   document.getElementById('remotetext').appendChild(el);
