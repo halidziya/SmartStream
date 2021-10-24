@@ -150,7 +150,7 @@ function send_data(data)
   dc.send(data);
 }
 
-function add_keypress()
+async function page_load()
 {
   var input = document.getElementById("inputtext");
   // Execute a function when the user releases a key on the keyboard
@@ -164,5 +164,9 @@ function add_keypress()
       input.value = "";
     }
   });
+
+  let video = document.querySelector("#video");
+  let camera_stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+	video.srcObject = camera_stream;
 }
-window.onload = add_keypress;
+window.onload = page_load;
