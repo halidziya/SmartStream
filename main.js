@@ -1,5 +1,5 @@
 // Config variables: change them to point to your own servers
-const SIGNALING_SERVER_URL = 'http://192.168.1.189:9999';
+const SIGNALING_SERVER_URL = 'http://localhost:9999';
 const TURN_SERVER_URL = 'localhost:3478';
 const TURN_SERVER_USERNAME = 'username';
 const TURN_SERVER_CREDENTIAL = 'credential';
@@ -62,9 +62,38 @@ function add_text(text)
   document.getElementById('remotetext').appendChild(el);
 }
 
+
+function draw_dots(mesh, canvas_id="local") {
+  var canvas = document.getElementById(canvas_id);
+  var canvasWidth = 400;
+  var canvasHeight = 400;
+  var ctx = canvas.getContext("2d");
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  var canvasData = ctx.getImageData(0, 0, canvasWidth, canvasHeight);
+  for(let i=0;i<mesh.length;i++)
+  {
+    x = parseInt(mesh[i][0]/3);
+    y = parseInt(mesh[i][1]/3);
+    var index = (x + y * canvasWidth) * 4;
+    canvasData.data[index + 0] = 0;
+    canvasData.data[index + 1] = 0;
+    canvasData.data[index + 2] = 0;
+    canvasData.data[index + 3] = 255;
+  }
+  ctx.putImageData(canvasData, 0, 0);
+}
+
+var last_message = null;
 function handleReceiveMessage(message){
+    last_message = message;
     console.log("Message received");
-    add_text(message.data);
+    parsed = JSON.parse(message.data);
+    if (parsed["remote_mesh"]){
+      draw_dots(parsed["remote_mesh"], "remote");
+    }
+    else{
+      add_text(message.data);
+    }
 }
 
 function receiveChannelCallback(event) {
@@ -150,8 +179,48 @@ function send_data(data)
   dc.send(data);
 }
 
-async function page_load()
+function startVideo()
 {
+    const video = document.getElementById("video");
+    navigator.mediaDevices.getUserMedia({video:{}}).then(
+    function(stream){
+        video.srcObject = stream
+        video.play()
+    })
+}
+
+let model = null;
+async function load_model()
+{
+  model = await faceLandmarksDetection.load(
+    faceLandmarksDetection.SupportedPackages.mediapipeFacemesh);
+}
+
+
+
+async function send_mesh(mesh)
+{
+  send_data(JSON.stringify({'remote_mesh' : mesh}));
+}
+
+let last_predictions = null;
+async function update_mesh()
+{
+    last_predictions = await model.estimateFaces({
+      input: document.querySelector("video")});
+    let mesh = last_predictions[0].scaledMesh;
+    send_mesh(mesh);
+    draw_dots(mesh);
+}
+
+
+
+function page_load()
+{
+  startVideo();
+  load_model();
+  setTimeout(function (){ setInterval(update_mesh, 100)}, 2000);
+
   var input = document.getElementById("inputtext");
   // Execute a function when the user releases a key on the keyboard
   input.addEventListener("keyup", function(event) {
@@ -165,8 +234,6 @@ async function page_load()
     }
   });
 
-  let video = document.querySelector("#video");
-  let camera_stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-	video.srcObject = camera_stream;
+
 }
 window.onload = page_load;

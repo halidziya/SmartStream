@@ -1,0 +1,16 @@
+.block-container {
+    width: 440px;
+    height: 460px;
+    padding: 10px;
+}
+
+ion-grid{
+    background-color: #13b17c;
+}
+
+.block {
+    width: 400px;
+    height: 400px;
+    margin: 10px;
+}
+
