@@ -2,13 +2,41 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>WebRTC working example</title>
+    <title>WebRTC Face 2 Face</title>
+    <script src="https://unpkg.com/@tensorflow/tfjs-core@2.4.0/dist/tf-core.js"></script>
+    <script src="https://unpkg.com/@tensorflow/tfjs-converter@2.4.0/dist/tf-converter.js"></script>
+    <script src="https://unpkg.com/@tensorflow/tfjs-backend-webgl@2.4.0/dist/tf-backend-webgl.js"></script>
+    <script src="https://unpkg.com/@tensorflow-models/face-landmarks-detection@0.0.1/dist/face-landmarks-detection.js"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.esm.js"></script>
+    <script nomodule src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ionic/core/css/ionic.bundle.css"/>
+    <script src="https://kit.fontawesome.com/daaf565af0.js" crossorigin="anonymous"></script>
+    <script src="socket.io.min.js"></script>
+    <script src="main.js"></script>
+    <link rel="stylesheet" href="main.css">
 </head>
 <body>
+    <IonGrid >
+    <IonRow>
+    <IonCol col-6>
+        <ion-card class="block-container level">
+        <canvas class="block" style="border: 1px solid grey;"> 
+        </canvas>
+        </ion-card>
+    </IonCol>
+    
+    <IonCol col-6>
+        <ion-card class="block-container level">
+        <canvas class="block" style="border: 1px solid grey;"> 
+        </canvas>
+        </ion-card>
+    </IonCol >
+
+    </IonRow>
+    </IonGrid>
+    <br>
     <span id="remotetext">Text Messages:<br></span>
     <br>
     <input type=text id="inputtext"></input>
-    <script src="socket.io.min.js"></script>
-    <script src="main.js"></script>
 </body>
 </html>

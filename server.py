@@ -1,3 +1,4 @@
+#https://pfertyk.me/2020/03/webrtc-a-working-example/
 from aiohttp import web
 import socketio
 
@@ -28,4 +29,4 @@ async def data(sid, data):
 
 
 if __name__ == '__main__':
-    web.run_app(app, port=9999)
+    web.run_app(app, host="0.0.0.0", port=9999)

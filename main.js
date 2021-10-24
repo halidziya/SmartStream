@@ -1,5 +1,5 @@
 // Config variables: change them to point to your own servers
-const SIGNALING_SERVER_URL = 'http://localhost:9999';
+const SIGNALING_SERVER_URL = 'http://192.168.1.189:9999';
 const TURN_SERVER_URL = 'localhost:3478';
 const TURN_SERVER_USERNAME = 'username';
 const TURN_SERVER_CREDENTIAL = 'credential';
@@ -54,14 +54,17 @@ function handleSendChannelStatusChange(data)
     console.log(data);
 }
 
+function add_text(text)
+{
+  var el = document.createElement("p");
+  var txtNode = document.createTextNode(text);
+  el.appendChild(txtNode);
+  document.getElementById('remotetext').appendChild(el);
+}
+
 function handleReceiveMessage(message){
     console.log("Message received");
-    console.log(message);
-    var el = document.createElement("p");
-    var txtNode = document.createTextNode(message.data);
-
-    el.appendChild(txtNode);
-    document.getElementById('remotetext').appendChild(el);
+    add_text(message.data);
 }
 
 function receiveChannelCallback(event) {
@@ -146,3 +149,20 @@ function send_data(data)
 {
   dc.send(data);
 }
+
+function add_keypress()
+{
+  var input = document.getElementById("inputtext");
+  // Execute a function when the user releases a key on the keyboard
+  input.addEventListener("keyup", function(event) {
+    // Number 13 is the "Enter" key on the keyboard
+    if (event.keyCode === 13) {
+      // Cancel the default action, if needed
+      event.preventDefault();
+      send_data(input.value);
+      add_text(input.value);
+      input.value = "";
+    }
+  });
+}
+window.onload = add_keypress;
