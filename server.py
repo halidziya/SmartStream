@@ -1,6 +1,7 @@
 #https://pfertyk.me/2020/03/webrtc-a-working-example/
 from aiohttp import web
 import socketio
+import ssl
 
 ROOM = 'room'
 
@@ -29,4 +30,6 @@ async def data(sid, data):
 
 
 if __name__ == '__main__':
-    web.run_app(app, host="0.0.0.0", port=9999)
+    context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+    context.load_cert_chain('dell_cert.pem', "dell.pem")
+    web.run_app(app, host="0.0.0.0", port=9999, ssl_context=context)

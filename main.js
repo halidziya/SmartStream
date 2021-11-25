@@ -1,5 +1,5 @@
 // Config variables: change them to point to your own servers
-const SIGNALING_SERVER_URL = 'http://localhost:9999';
+const SIGNALING_SERVER_URL = 'https://192.168.1.189:9999';
 const TURN_SERVER_URL = 'localhost:3478';
 const TURN_SERVER_USERNAME = 'username';
 const TURN_SERVER_CREDENTIAL = 'credential';
@@ -87,8 +87,13 @@ var last_message = null;
 function handleReceiveMessage(message){
     last_message = message;
     console.log("Message received");
-    parsed = JSON.parse(message.data);
-    if (parsed["remote_mesh"]){
+    let mesh = null;
+    try{
+      parsed = JSON.parse(message.data);
+      mesh = parsed["remote_mesh"];
+    }
+    catch{};
+    if (mesh){
       draw_dots(parsed["remote_mesh"], "remote");
     }
     else{
@@ -179,10 +184,11 @@ function send_data(data)
   dc.send(data);
 }
 
+
 function startVideo()
 {
     const video = document.getElementById("video");
-    navigator.mediaDevices.getUserMedia({video:{}}).then(
+    navigator.mediaDevices.getUserMedia({video:true, audio: true}).then(
     function(stream){
         video.srcObject = stream
         video.play()
@@ -219,7 +225,7 @@ function page_load()
 {
   startVideo();
   load_model();
-  setTimeout(function (){ setInterval(update_mesh, 100)}, 2000);
+  setTimeout(function (){ setInterval(update_mesh, 125)}, 1000);
 
   var input = document.getElementById("inputtext");
   // Execute a function when the user releases a key on the keyboard
